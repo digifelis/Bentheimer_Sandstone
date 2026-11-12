@@ -7,7 +7,7 @@ Micro-CT Bentheimer Sandstone."
 ## Scope
 
 The archive provides the ROI registry, L1/4x and L2/2x voxel-CFD summaries,
-matched native-resolution L3/1x pilot summaries, model metrics and predictions,
+matched native-resolution L3/1x summaries, model metrics and predictions,
 computational-cost records, analysis code, and the figures used in the manuscript.
 The repository supports the reported resolution-bias correction analysis; it does
 not claim that L2 is physical ground truth or that the three voxel tiers establish
@@ -66,15 +66,40 @@ The analysis entry points added during revision are located directly under
 `scripts/`, including `complete_revision_analyses.py`,
 `run_operator_cnn_multiseed.py`, and `train_operator_graph_gcn.py`.
 
+## Revision R1 additions
+
+The files added for the first revision are provided in `github_R1_update.zip`
+with the same relative paths as the main archive:
+
+- `src/70_...py` to `src/80_...py`: revision analyses (model audit and corrected
+  feature importance, recalibration and multi-fidelity baselines, hyperparameter
+  sensitivity and learning curve, spatial-independence and ROI-level uncertainty
+  analyses, 6/18/26-connectivity sensitivity, native-resolution comparison,
+  stage-resolved cost accounting, independent verification, revision figures).
+- `scripts/run_l3_expansion_wsl.sh`: runner for the 36 native-resolution cases.
+- `results/operator_v1/revision_r1/`: all revision outputs, including
+  `l3_expansion/flow_summaries/` (flow and permeability summaries of the native
+  L3/1x cases), `verification_checks.csv`, and `R1_MANIFEST.csv` (relative paths,
+  byte sizes and SHA-256 hashes of the revision files).
+- `figures/paper/fig09_feature_importance_R1.png` and
+  `figures/paper/fig11b_native_comparison_R1.png`.
+
 ## Evidence boundaries
 
-- The L3/1x evidence is a five-case x-flow pilot, including three test-block ROIs.
-- The L1-L2-L3 sequence is non-monotonic and does not support a Grid Convergence
-  Index or population-level native-resolution error bounds.
+- The L3/1x evidence comprises 36 test-block cases (12 ROIs x 3 flow axes) and the
+  original five-case x-flow pilot.
+- Both coarsened tiers overestimate L3 (median ratios 1.13 for L1 and 1.26 for L2);
+  the L1-L2-L3 sequence is non-monotonic in level and does not support a Grid
+  Convergence Index, while L2 preserves the native ranking (Spearman 0.97).
+- A two-parameter linear recalibration of L1 recovers most of the L1-to-L2
+  improvement; the additional gain of the random-forest correction is not
+  statistically resolved with 12 test ROIs.
+- The four blocks are contiguous sub-volumes of one specimen; block-wise validation
+  tests spatial transfer within that specimen only.
 - The field-of-view study reports morphology through 320 voxels but does not
   establish a transport REV.
-- The reported 12.5x ratio is a paired solver-stage L2/L1 timing ratio, not an
-  end-to-end heterogeneous-hardware speedup.
+- The 12.5x ratio is a paired solver-stage L2/L1 timing ratio; including case
+  preparation on the same CPU, the corrected workflow is about 7-10x cheaper per case.
 - The retained data cover Bentheimer sandstone and single-phase permeability only.
 
 ## Integrity
